@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/CALL_ADDRESS"
+        android:title="make a call"/>
+
+    <item android:id="@+id/SET_SIP_OPTIONS"
+        android:title="SIP options" />
+
+    <item android:id="@+id/HANG_UP"
+        android:title="close call" />
+
+</menu>
