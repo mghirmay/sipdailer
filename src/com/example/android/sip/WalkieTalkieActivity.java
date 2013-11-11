@@ -72,6 +72,8 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
         // Let's prevent that.
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        findViewById( R.id.callStateImage ).setOnTouchListener( this );
+
         initializeManager();
     }
 
@@ -123,7 +125,7 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
         String username = prefs.getString("namePref", "");
         String domain = prefs.getString("domainPref", "");
         String password = prefs.getString("passPref", "");
-        int port = 5060; //prefs.getInt("portPref",5060);
+        int port = Integer.parseInt( prefs.getString( "portPref", "5060" ) );
 
         if (username.length() == 0 || domain.length() == 0 || password.length() == 0) {
             showDialog(R.id.SET_SIP_OPTIONS);
@@ -258,7 +260,7 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
 
     /**
      * Updates the status box with the SIP address of the current call.
-     * @param call The current, active call.
+     * @param incomingCall The current, active call.
      */
     public void updateCallStatus(SipAudioCall incomingCall) {
         if((call != null) && call.isInCall()){
@@ -288,15 +290,47 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
      * as it normally would.
      */
     public boolean onTouch(View v, MotionEvent event) {
-        if (call == null) {
-            return false;
-        } else if (event.getAction() == MotionEvent.ACTION_DOWN && call != null && call.isInCall()) {
-            call.close();
+
+        switch( v.getId() )
+        {
+
+            case R.id.callStateImage:
+                if ( event.getAction() == MotionEvent.ACTION_DOWN
+                        && call != null
+                        && call.isInCall() ) {
+
+                    call.close();
+                    return true;
+
+                } else if( event.getAction() == MotionEvent.ACTION_DOWN
+                        && ( call == null || ( call != null && !call.isInCall() ) ) ) {
+
+                    showDialog(R.id.CALL_ADDRESS);
+                    return true;
+
+                }
+                return true;
+
         }
+
         return false;
+
     }
 
+    @Override
+    public void onPrepareDialog(int id, android.app.Dialog dialog) {
 
+        switch( id )
+        {
+
+            case R.id.CALL_ADDRESS:
+                //force keyboard
+                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+                break;
+
+        }
+
+    }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
