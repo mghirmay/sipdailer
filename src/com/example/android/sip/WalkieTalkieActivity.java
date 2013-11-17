@@ -41,8 +41,12 @@ import java.text.ParseException;
  */
 public class WalkieTalkieActivity extends Activity implements View.OnTouchListener {
 
-    private Timer autoUpdate;
     public String sipAddress = null;
+    public String sipUsername="";
+    public String sipDomain="";
+    public String sipPassword="";
+    public int    sipPort = 5060;
+
     public SipManager manager = null;
     public SipProfile profile = null;
     public SipAudioCall call = null;
@@ -122,20 +126,20 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        String username = prefs.getString("namePref", "");
-        String domain = prefs.getString("domainPref", "");
-        String password = prefs.getString("passPref", "");
-        int port = Integer.parseInt( prefs.getString( "portPref", "5060" ) );
+        sipUsername = prefs.getString("namePref", "");
+        sipDomain = prefs.getString("domainPref", "");
+        sipPassword = prefs.getString("passPref", "");
+        sipPort = Integer.parseInt( prefs.getString( "portPref", "5060" ) );
 
-        if (username.length() == 0 || domain.length() == 0 || password.length() == 0) {
+        if (sipUsername.length() == 0 || sipDomain.length() == 0 || sipPassword.length() == 0) {
             showDialog(R.id.SET_SIP_OPTIONS);
             return;
         }
 
         try {
-            SipProfile.Builder builder = new SipProfile.Builder(username, domain);
-            builder.setPassword(password);
-            builder.setPort(port);
+            SipProfile.Builder builder = new SipProfile.Builder(sipUsername, sipDomain);
+            builder.setPassword(sipPassword);
+            builder.setPort(sipPort);
             profile = builder.build();
 
             Intent i = new Intent();
@@ -212,6 +216,11 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
                     updateStatus("Ready.");
                 }
             };
+
+            //sipID correction (example: sipid@domain.com)
+            if(!sipAddress.contains("@")){
+                sipAddress = sipAddress + "@" + sipDomain;
+            }
 
             call = manager.makeAudioCall(profile.getUriString(), sipAddress, listener, 30);
 
@@ -299,7 +308,14 @@ public class WalkieTalkieActivity extends Activity implements View.OnTouchListen
                         && call != null
                         && call.isInCall() ) {
 
+                    try {
+                        call.endCall();
+                    } catch (SipException se) {
+                        Log.d("WalkieTalkieActivity/onOptionsItemSelected",
+                                "Error ending call.", se);
+                    }
                     call.close();
+                    updateStatus("call closed. / ready again.");
                     return true;
 
                 } else if( event.getAction() == MotionEvent.ACTION_DOWN
