@@ -25,14 +25,14 @@
     <EditTextPreference
         android:name="SIP Password"
         android:summary="Password for your SIP Account"
-        android:defaultValue="sinit-fair-phone.de"
+        android:defaultValue=""
         android:title="Enter Password"
         android:key="passPref"
         android:password="true" />
     <EditTextPreference
         android:name="SIP Domain"
         android:summary="Domain for your SIP Account"
-        android:defaultValue=""
+        android:defaultValue="sinit-fair-phone.de"
         android:title="Enter Domain"
         android:key="domainPref" />
     <EditTextPreference
