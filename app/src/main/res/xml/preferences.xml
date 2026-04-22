@@ -35,6 +35,12 @@
             android:defaultValue="sinitpower.de" />
 
         <EditTextPreference
+            android:key="apiPathPref"
+            android:title="API Path"
+            android:summary="Path to the Magnus API helper (e.g., /api.php)"
+            android:defaultValue="/api.php" />
+
+        <EditTextPreference
             android:key="portPref"
             android:title="Port"
             android:summary="Default is 5060"

@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView balanceText;
     private View statusIndicator;
     
-    private final BalanceClient balanceClient = new BalanceClient();
+    private final MagnusApiClient magnusApiClient = new MagnusApiClient();
 
     private final ActivityResultLauncher<String[]> permissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
@@ -250,6 +250,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void fetchBalance() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        
+        // Construct API URL from preferences
+        String domain = prefs.getString("domainPref", "sinitpower.de");
+        String apiPath = prefs.getString("apiPathPref", "/api.php");
+        String apiUrl = "https://" + domain + apiPath;
+        magnusApiClient.setBaseUrl(apiUrl);
+
         // Use phone number for balance check as requested
         String identifier = prefs.getString("phonePref", "");
         
@@ -260,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
         
         if (identifier.isEmpty()) return;
 
-        balanceClient.getBalance(identifier, new BalanceClient.BalanceCallback() {
+        magnusApiClient.getBalance(identifier, new MagnusApiClient.ApiCallback<String>() {
             @Override
             public void onSuccess(String balance) {
                 balanceText.setText("Balance: " + balance);

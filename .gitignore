@@ -26,3 +26,6 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Web API Configuration
+webAPI/config.php
