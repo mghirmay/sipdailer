@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand Colors (Teal) -->
+    <color name="primary">#004D40</color>
+    <color name="primary_variant">#00251A</color>
+    <color name="on_primary">#FFFFFF</color>
+    
+    <color name="secondary">#26A69A</color>
+    <color name="on_secondary">#000000</color>
+    
+    <!-- Light Mode Surfaces -->
+    <color name="background">#F5F5F5</color>
+    <color name="on_background">#212121</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="on_surface">#212121</color>
+    
+    <!-- Error colors -->
+    <color name="error">#B00020</color>
+    <color name="on_error">#FFFFFF</color>
+
+    <!-- Text secondary -->
+    <color name="text_secondary">#757575</color>
+
+    <!-- Dialpad key background -->
+    <color name="dialpad_key_bg">#EEEEEE</color>
+
+    <!-- Status colors -->
+    <color name="call_button_bg">#4CAF50</color>
+    <color name="hangup_button_bg">#F44336</color>
+    <color name="dialpad_button_text">#424242</color>
+</resources>

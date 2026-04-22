@@ -1,0 +1,43 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="Theme.SipDialer" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">@color/on_primary</item>
+
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorOnSecondary">@color/on_secondary</item>
+
+        <!-- Surface and Background colors -->
+        <item name="android:windowBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorError">@color/error</item>
+
+        <!-- On colors (text/icons on top of surfaces) -->
+        <item name="colorOnSurface">@color/on_surface</item>
+        <item name="colorOnBackground">@color/on_background</item>
+        <item name="colorOnError">@color/on_error</item>
+
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/primary_variant</item>
+
+        <!-- Force Text Colors globally -->
+        <item name="android:textColorPrimary">@color/on_background</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="android:editTextColor">@color/on_background</item>
+    </style>
+
+    <style name="DialpadButton" parent="Widget.Material3.Button.TextButton">
+        <item name="android:layout_width">80dp</item>
+        <item name="android:layout_height">80dp</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">@color/dialpad_button_text</item>
+        <item name="backgroundTint">@color/dialpad_key_bg</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.SipDialer.Circle</item>
+    </style>
+
+    <style name="ShapeAppearance.SipDialer.Circle" parent="ShapeAppearance.Material3.Corner.Full" />
+</resources>

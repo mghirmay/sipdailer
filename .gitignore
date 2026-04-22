@@ -1,0 +1,28 @@
+# Android Studio / IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+.gradle/
+build/
+captures/
+local.properties
+
+# Android
+*.apk
+*.ap_
+*.dex
+*.class
+bin/
+gen/
+out/
+
+# Backup / Cache
+.claude/
+.DS_Store
+Thumbs.db
+*.bak
+*.swp
+
+# Logs
+*.log

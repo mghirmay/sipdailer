@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/dialInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:hint="Enter number"
+        android:inputType="phone"
+        android:padding="12dp"
+        android:textColor="@color/on_background"
+        android:textSize="32sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:background="#DDDDDD"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dialInput" />
+
+    <GridLayout
+        android:id="@+id/dialPadGrid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:columnCount="3"
+        android:rowCount="4"
+        app:layout_constraintBottom_toTopOf="@+id/btnCall"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        app:layout_constraintVertical_bias="0.5">
+
+        <com.google.android.material.button.MaterialButton android:text="1" style="@style/DialpadButton" android:hapticFeedbackEnabled="true" />
+        <com.google.android.material.button.MaterialButton android:text="2" style="@style/DialpadButton" android:hapticFeedbackEnabled="true" />
+        <com.google.android.material.button.MaterialButton android:text="3" style="@style/DialpadButton" android:hapticFeedbackEnabled="true" />
+        <com.google.android.material.button.MaterialButton android:text="4" style="@style/DialpadButton" android:hapticFeedbackEnabled="true" />
+        <com.google.android.material.button.MaterialButton android:text="5" style="@style/DialpadButton" android:hapticFeedbackEnabled="true" />
+        <com.google.android.material.button.MaterialButton android:text="6" style="@style/DialpadButton" android:hapticFeedbackEnabled="true" />
+        <com.google.android.material.button.MaterialButton android:text="7" style="@style/DialpadButton" android:hapticFeedbackEnabled="true" />
+        <com.google.android.material.button.MaterialButton android:text="8" style="@style/DialpadButton" android:hapticFeedbackEnabled="true" />
+        <com.google.android.material.button.MaterialButton android:text="9" style="@style/DialpadButton" android:hapticFeedbackEnabled="true" />
+        <com.google.android.material.button.MaterialButton android:text="*" style="@style/DialpadButton" android:hapticFeedbackEnabled="true" />
+        <com.google.android.material.button.MaterialButton android:text="0" style="@style/DialpadButton" android:hapticFeedbackEnabled="true" />
+        <com.google.android.material.button.MaterialButton android:text="#" style="@style/DialpadButton" android:hapticFeedbackEnabled="true" />
+    </GridLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnCall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        app:backgroundTint="@color/call_button_bg"
+        app:fabCustomSize="72dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:maxImageSize="36dp"
+        app:srcCompat="@android:drawable/ic_menu_call"
+        app:tint="@color/on_primary" />
+
+    <ImageButton
+        android:id="@+id/btnDelete"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@android:drawable/ic_input_delete"
+        app:layout_constraintBottom_toBottomOf="@+id/btnCall"
+        app:layout_constraintStart_toEndOf="@+id/btnCall"
+        app:layout_constraintTop_toTopOf="@+id/btnCall"
+        app:layout_constraintHorizontal_bias="0.3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/on_background" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

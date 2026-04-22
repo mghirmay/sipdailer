@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="Account Settings">
+        <EditTextPreference
+            android:key="namePref"
+            android:title="Username"
+            android:summary="SIP extension/username"
+            android:defaultValue="" />
+
+        <EditTextPreference
+            android:key="authIdPref"
+            android:title="Authentication ID"
+            android:summary="Usually same as username (leave blank if unsure)"
+            android:defaultValue="" />
+
+        <EditTextPreference
+            android:key="passPref"
+            android:title="Password"
+            android:summary="SIP password"
+            android:defaultValue=""
+            android:inputType="textPassword" />
+
+        <EditTextPreference
+            android:key="domainPref"
+            android:title="Domain"
+            android:summary="SIP server domain (e.g., sinitpower.de)"
+            android:defaultValue="sinitpower.de" />
+
+        <EditTextPreference
+            android:key="portPref"
+            android:title="Port"
+            android:summary="Default is 5060"
+            android:defaultValue="5060"
+            android:inputType="number" />
+            
+        <ListPreference
+            android:key="transportPref"
+            android:title="Transport"
+            android:summary="UDP is standard for MagnusBilling"
+            android:entries="@array/transport_entries"
+            android:entryValues="@array/transport_values"
+            android:defaultValue="UDP" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Connection">
+        <SwitchPreferenceCompat
+            android:key="enabledPref"
+            android:title="Enable Account"
+            android:summary="Connect or disconnect from SIP server"
+            android:defaultValue="true" />
+        
+        <Preference
+            android:key="reconnectPref"
+            android:title="Reconnect"
+            android:summary="Force a re-registration with the server" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
