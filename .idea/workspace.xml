@@ -14,68 +14,14 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7d39c1c1-d413-4c34-8cdc-b99af90eb4e5" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/android/sip/ContactsFragment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/android/sip/DialpadFragment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/android/sip/MainActivity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/android/sip/PlaceholderFragment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_contacts.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_dialpad.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_placeholder.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/item_contact.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/menu/bottom_nav_menu.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/values/arrays.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/values/themes.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/local.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+    <list default="true" id="7d39c1c1-d413-4c34-8cdc-b99af90eb4e5" name="Default" comment="update to gradle + linphone sdk">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/android/sip/BalanceClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AndroidManifest.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SipDemo.apk" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gen/com/example/android/sip/BuildConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gen/com/example/android/sip/Manifest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gen/com/example/android/sip/R.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SipDemo/SipDemo.apk" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SipDemo/SipDemo.unaligned.apk" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SipDemo/com/example/android/sip/BuildConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SipDemo/com/example/android/sip/IncomingCallReceiver$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SipDemo/com/example/android/sip/IncomingCallReceiver.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SipDemo/com/example/android/sip/R$attr.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SipDemo/com/example/android/sip/R$drawable.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SipDemo/com/example/android/sip/R$id.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SipDemo/com/example/android/sip/R$layout.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SipDemo/com/example/android/sip/R$menu.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SipDemo/com/example/android/sip/R$string.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SipDemo/com/example/android/sip/R$xml.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SipDemo/com/example/android/sip/R.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SipDemo/com/example/android/sip/SipSettings.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SipDemo/com/example/android/sip/WalkieTalkieActivity$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SipDemo/com/example/android/sip/WalkieTalkieActivity$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SipDemo/com/example/android/sip/WalkieTalkieActivity$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SipDemo/com/example/android/sip/WalkieTalkieActivity$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SipDemo/com/example/android/sip/WalkieTalkieActivity$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SipDemo/com/example/android/sip/WalkieTalkieActivity$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SipDemo/com/example/android/sip/WalkieTalkieActivity$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SipDemo/com/example/android/sip/WalkieTalkieActivity.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/drawable/btn_record.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/drawable/btn_speak_normal.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/drawable/btn_speak_pressed.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/drawable/btn_speak_selected.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/drawable/icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/layout/call_address_dialog.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/layout/walkietalkie.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/menu/sipphone_menu.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/values/strings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/xml/preferences.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/example/android/sip/IncomingCallReceiver.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/example/android/sip/SipSettings.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/example/android/sip/WalkieTalkieActivity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/sip/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/android/sip/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/xml/preferences.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/xml/preferences.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -263,6 +209,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;mghirmay&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/mghirmay/sipdailer.git&quot;,
+    &quot;accountId&quot;: &quot;421215c6-5d42-4b8b-a632-ac3dc30dc467&quot;
+  }
+}</component>
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
@@ -333,13 +291,17 @@
     &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
     &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.google.services.firebase.aqiPopupShown&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/mug/Documents/Projects/AAAsinitpower/sipdailer&quot;
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/mug/Documents/Projects/AAAsinitpower/SinitPhoneApp&quot;
   }
 }</component>
-  <component name="RunManager" selected="Android App.app">
+  <component name="RunManager">
     <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
       <module name="" />
       <option name="ACTIVITY_CLASS" value="" />
@@ -527,6 +489,15 @@
       <option name="presentableId" value="Default" />
       <updated>1383259753769</updated>
     </task>
+    <task id="LOCAL-00001" summary="update to gradle + linphone sdk">
+      <option name="closed" value="true" />
+      <created>1776883149378</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1776883149378</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -587,6 +558,13 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout-to-restore>
   </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="update to gradle + linphone sdk" />
+    <option name="LAST_COMMIT_MESSAGE" value="update to gradle + linphone sdk" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
@@ -607,13 +585,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/example/android/sip/MainActivity.java</url>
-          <line>72</line>
+          <line>74</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/android/sip/MainActivity.java</url>
-          <line>68</line>
-          <option name="timeStamp" value="5" />
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/android/sip/BalanceClient.java</url>
+          <line>43</line>
+          <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -723,5 +701,21 @@
         </state>
       </provider>
     </entry>
+  </component>
+  <component name="play_dynamic_filters_status">
+    <option name="appIdToCheckInfo">
+      <map>
+        <entry key="com.example.android.sip">
+          <value>
+            <CheckInfo lastCheckTimestamp="1776883138911" />
+          </value>
+        </entry>
+        <entry key="com.example.android.sip.test">
+          <value>
+            <CheckInfo lastCheckTimestamp="1776883138910" />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

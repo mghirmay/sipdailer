@@ -9,6 +9,13 @@
             android:defaultValue="" />
 
         <EditTextPreference
+            android:key="phonePref"
+            android:title="Phone Number"
+            android:summary="Used for balance check (e.g., 4915901005556)"
+            android:defaultValue=""
+            android:inputType="phone" />
+
+        <EditTextPreference
             android:key="authIdPref"
             android:title="Authentication ID"
             android:summary="Usually same as username (leave blank if unsure)"

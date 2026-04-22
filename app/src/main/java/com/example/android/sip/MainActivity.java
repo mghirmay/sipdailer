@@ -46,7 +46,10 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView navView;
     private TextView connectionStatusText;
     private TextView callStatusText;
+    private TextView balanceText;
     private View statusIndicator;
+    
+    private final BalanceClient balanceClient = new BalanceClient();
 
     private final ActivityResultLauncher<String[]> permissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
@@ -69,11 +72,9 @@ public class MainActivity extends AppCompatActivity {
             sipService = ((LinphoneService.LocalBinder) binder).getService();
             bound = true;
             
-            // Log current raw state for debugging
             String rawState = sipService.getRegistrationState();
             Log.d("SipDialerUI", "OnServiceConnected: Raw Registration State: " + rawState);
             
-            // Only register if we aren't already connected
             if (rawState.contains("None") || rawState.contains("Failed")) {
                 registerIfNeeded();
             } else {
@@ -94,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
 
     private final SharedPreferences.OnSharedPreferenceChangeListener prefListener = (prefs, key) -> {
         if ("enabledPref".equals(key) || "namePref".equals(key) || "authIdPref".equals(key) || "passPref".equals(key) || "domainPref".equals(key) || "portPref".equals(key) || "transportPref".equals(key)) {
-            // Force a new registration when settings change
             lastUsername = null;
             registerIfNeeded();
         }
@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
         connectionStatusText = findViewById(R.id.connection_status_text);
         callStatusText = findViewById(R.id.call_status_text);
+        balanceText = findViewById(R.id.balance_text);
         statusIndicator = findViewById(R.id.status_indicator);
         navView = findViewById(R.id.bottom_navigation);
 
@@ -228,7 +229,6 @@ public class MainActivity extends AppCompatActivity {
         if (!enabled) {
             if (lastEnabled) {
                 sipService.getCore().clearAccounts();
-                sipService.getCore().clearProxyConfig();
                 onRegistrationStateChanged("None", null);
                 lastEnabled = false;
             }
@@ -237,7 +237,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (username.isEmpty() || password.isEmpty()) return;
         
-        // Skip registration if already connected with same credentials
         if (username.equals(lastUsername) && domain.equals(lastDomain) && enabled == lastEnabled) {
             String state = sipService.getRegistrationState();
             if (state.contains("Ok")) return;
@@ -247,6 +246,31 @@ public class MainActivity extends AppCompatActivity {
         lastDomain = domain;
         lastEnabled = enabled;
         sipService.registerAccount(username, authId, password, domain, port, transport);
+    }
+
+    private void fetchBalance() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        // Use phone number for balance check as requested
+        String identifier = prefs.getString("phonePref", "");
+        
+        // Fallback to username if phone is empty
+        if (identifier.isEmpty()) {
+            identifier = prefs.getString("namePref", "");
+        }
+        
+        if (identifier.isEmpty()) return;
+
+        balanceClient.getBalance(identifier, new BalanceClient.BalanceCallback() {
+            @Override
+            public void onSuccess(String balance) {
+                balanceText.setText("Balance: " + balance);
+            }
+
+            @Override
+            public void onError(String error) {
+                balanceText.setText("Balance: --");
+            }
+        });
     }
 
     private void onCallStateChanged(String state, String caller) {
@@ -265,23 +289,16 @@ public class MainActivity extends AppCompatActivity {
         String displayText;
         int color;
         
-        // Handles "Ok", "RegistrationOk", "Registered", etc.
         if (state.contains("Ok") || state.equalsIgnoreCase("Registered")) {
             displayText = "Online";
             color = Color.GREEN;
+            fetchBalance(); // Fetch balance on successful registration
         } else if (state.contains("Progress")) {
             displayText = "Connecting...";
             color = Color.YELLOW;
         } else if (state.contains("Failed")) {
             displayText = "Error";
             color = Color.RED;
-            if (error != null) {
-                if (error.contains("Connection refused") || error.contains("IO Error")) {
-                    Toast.makeText(this, "Network Error: Server rejected connection.", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(this, "SIP Error: " + error, Toast.LENGTH_LONG).show();
-                }
-            }
         } else {
             displayText = "Offline";
             color = Color.GRAY;

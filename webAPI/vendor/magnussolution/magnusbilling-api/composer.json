@@ -1,0 +1,20 @@
+{
+    "name": "magnussolution/magnusbilling-api",
+    "description": "PHP wrapper for the MagnusBilling API.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [{
+        "name": "Adilson Magnus",
+        "email": "info@magnussolution.com",
+        "homepage": "https://magnussolution.com",
+        "role": "Development"
+    }],
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "magnusbilling\\api\\": "src/"
+        }
+    }
+}
