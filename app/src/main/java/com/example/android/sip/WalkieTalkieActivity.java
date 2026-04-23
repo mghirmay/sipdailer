@@ -196,6 +196,8 @@ public class WalkieTalkieActivity extends AppCompatActivity {
         String password = prefs.getString("passPref", "");
         String portStr = prefs.getString("portPref", "5060");
         String transport = prefs.getString("transportPref", "UDP");
+        boolean useStun = prefs.getBoolean("stunEnabledPref", true);
+        String stunServer = prefs.getString("stunServerPref", "stun.l.google.com:19302");
         int port = 5060;
         try {
             port = Integer.parseInt(portStr);
@@ -212,7 +214,7 @@ public class WalkieTalkieActivity extends AppCompatActivity {
         lastUsername = username;
         lastDomain = domain;
         updateStatus("Registering...");
-        sipService.registerAccount(username, authId, password, domain, port, transport);
+        sipService.registerAccount(username, authId, password, domain, port, transport, useStun, stunServer);
     }
 
     private void showCallDialog() {

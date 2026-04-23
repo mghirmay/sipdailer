@@ -18,7 +18,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class MagnusApiClient {
-    private String baseUrl = "https://sinitpower.de/api.php";
+    private String baseUrl = "https://sinitpower.de/magnusbillingApi.php";
     private final OkHttpClient client = new OkHttpClient();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 

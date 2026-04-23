@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
     private void updateApiUrl() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String domain = prefs.getString("domainPref", "sinitpower.de");
-        String apiPath = prefs.getString("apiPathPref", "/api.php");
+        String apiPath = prefs.getString("apiPathPref", "/magnusbillingApi.php");
         apiClient.setBaseUrl("https://" + domain + apiPath);
     }
 
@@ -75,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
         EditText etPath = dialogView.findViewById(R.id.edit_api_path);
         
         etDomain.setText(prefs.getString("domainPref", "sinitpower.de"));
-        etPath.setText(prefs.getString("apiPathPref", "/api.php"));
+        etPath.setText(prefs.getString("apiPathPref", "/magnusbillingApi.php"));
 
         new AlertDialog.Builder(this)
                 .setTitle("Server Settings")

@@ -128,9 +128,20 @@ public class LinphoneService extends Service {
         return "None";
     }
 
-    public void registerAccount(String username, String authId, String password, String domain, int port, String transport) {
+    public void registerAccount(String username, String authId, String password, String domain, int port, String transport, boolean useStun, String stunServer) {
         core.clearAccounts();
         core.clearAllAuthInfo();
+
+        // Configure STUN/NAT settings
+        if (useStun && stunServer != null && !stunServer.isEmpty()) {
+            core.setNatPolicy(null); // Clear old policy
+            NatPolicy natPolicy = core.createNatPolicy();
+            natPolicy.setStunServer(stunServer);
+            natPolicy.setStunEnabled(true);
+            core.setNatPolicy(natPolicy);
+        } else {
+            core.setNatPolicy(null);
+        }
 
         String effectiveAuthId = (authId == null || authId.isEmpty()) ? username : authId;
         AuthInfo auth = Factory.instance().createAuthInfo(username, effectiveAuthId, password, null, null, domain);

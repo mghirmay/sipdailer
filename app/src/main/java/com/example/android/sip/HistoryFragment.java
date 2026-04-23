@@ -55,7 +55,7 @@ public class HistoryFragment extends Fragment {
     private void fetchHistory() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
         String domain = prefs.getString("domainPref", "sinitpower.de");
-        String apiPath = prefs.getString("apiPathPref", "/api.php");
+        String apiPath = prefs.getString("apiPathPref", "/magnusbillingApi.php");
         apiClient.setBaseUrl("https://" + domain + apiPath);
 
         String username = prefs.getString("namePref", "");

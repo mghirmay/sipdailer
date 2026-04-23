@@ -221,6 +221,9 @@ public class MainActivity extends AppCompatActivity {
         String password = prefs.getString("passPref", "");
         String transport = prefs.getString("transportPref", "UDP");
         
+        boolean useStun = prefs.getBoolean("stunEnabledPref", true);
+        String stunServer = prefs.getString("stunServerPref", "stun.l.google.com:19302");
+        
         int port = 5060;
         try {
             port = Integer.parseInt(prefs.getString("portPref", "5060"));
@@ -245,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
         lastUsername = username;
         lastDomain = domain;
         lastEnabled = enabled;
-        sipService.registerAccount(username, authId, password, domain, port, transport);
+        sipService.registerAccount(username, authId, password, domain, port, transport, useStun, stunServer);
     }
 
     private void fetchBalance() {
@@ -253,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
         
         // Construct API URL from preferences
         String domain = prefs.getString("domainPref", "sinitpower.de");
-        String apiPath = prefs.getString("apiPathPref", "/api.php");
+        String apiPath = prefs.getString("apiPathPref", "/magnusbillingApi.php");
         String apiUrl = "https://" + domain + apiPath;
         magnusApiClient.setBaseUrl(apiUrl);
 
@@ -283,9 +286,13 @@ public class MainActivity extends AppCompatActivity {
     private void onCallStateChanged(String state, String caller) {
         if (state == null || state.equals("Released") || state.equals("End")) {
             callStatusText.setVisibility(View.GONE);
+            fetchBalance(); // Fetch balance after a call ends
         } else {
             callStatusText.setVisibility(View.VISIBLE);
             callStatusText.setText(state);
+            if (state.equals("StreamsRunning") || state.equals("Connected")) {
+                fetchBalance(); // Fetch balance when call is answered/starts
+            }
         }
         dialpadFragment.updateCallButton(bound && sipService.isInCall());
     }

@@ -29,7 +29,7 @@
         android:id="@+id/edit_api_path"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="e.g. /api.php"
+        android:hint="e.g. /magnusbillingApi.php"
         android:inputType="text" />
 
 </LinearLayout>

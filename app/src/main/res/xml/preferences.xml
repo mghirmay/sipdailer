@@ -32,8 +32,8 @@
         <EditTextPreference
             android:key="apiPathPref"
             android:title="API Path"
-            android:summary="Path to the Magnus API helper (e.g., /api.php)"
-            android:defaultValue="/api.php" />
+            android:summary="Path to the Magnus API helper (e.g., /magnusbillingApi.php)"
+            android:defaultValue="/magnusbillingApi.php" />
 
         <EditTextPreference
             android:key="portPref"
@@ -49,6 +49,21 @@
             android:entries="@array/transport_entries"
             android:entryValues="@array/transport_values"
             android:defaultValue="UDP" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="STUN Setting">
+        <SwitchPreferenceCompat
+            android:key="stunEnabledPref"
+            android:title="Enable STUN"
+            android:summary="Use STUN server for NAT traversal"
+            android:defaultValue="true" />
+
+        <EditTextPreference
+            android:key="stunServerPref"
+            android:title="STUN Server"
+            android:summary="e.g., stun.l.google.com:19302"
+            android:defaultValue="stun.l.google.com:19302"
+            android:dependency="stunEnabledPref" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Actions">
