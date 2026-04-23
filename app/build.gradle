@@ -45,13 +45,14 @@ dependencies {
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.navigation:navigation-fragment:2.7.7'
     implementation 'androidx.navigation:navigation-ui:2.7.7'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     
     // Networking
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
     
     // Linphone SDK
     implementation 'org.linphone:linphone-sdk-android:5.2.+'
-    
+
     // Force alignment of Kotlin stdlib to prevent duplicate class errors
     constraints {
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22") {

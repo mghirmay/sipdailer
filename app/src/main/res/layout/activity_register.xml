@@ -6,6 +6,21 @@
     android:padding="24dp"
     android:gravity="center_horizontal">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp">
+
+        <ImageButton
+            android:id="@+id/btn_server_settings_reg"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_preferences"
+            android:contentDescription="Server Settings" />
+    </RelativeLayout>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -62,6 +77,14 @@
         android:backgroundTint="@color/secondary"
         android:textColor="@android:color/white"
         android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/tv_login_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Already have an account? Login here"
+        android:textColor="@color/secondary"
+        android:padding="8dp"/>
 
     <ProgressBar
         android:id="@+id/reg_progress"

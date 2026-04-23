@@ -1,13 +1,17 @@
 package com.example.android.sip;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 
 public class SipSettings extends AppCompatActivity {
 
@@ -51,6 +55,43 @@ public class SipSettings extends AppCompatActivity {
                     return true;
                 });
             }
+
+            Preference loginPref = findPreference("loginPref");
+            if (loginPref != null) {
+                loginPref.setOnPreferenceClickListener(preference -> {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    return true;
+                });
+            }
+
+            Preference logoutPref = findPreference("logoutPref");
+            if (logoutPref != null) {
+                logoutPref.setOnPreferenceClickListener(preference -> {
+                    showLogoutConfirmation();
+                    return true;
+                });
+            }
+        }
+
+        private void showLogoutConfirmation() {
+            new AlertDialog.Builder(requireContext())
+                    .setTitle("Logout")
+                    .setMessage("Are you sure you want to logout? This will clear your credentials.")
+                    .setPositiveButton("Logout", (dialog, which) -> {
+                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
+                        prefs.edit()
+                                .remove("namePref")
+                                .remove("passPref")
+                                .putBoolean("enabledPref", false)
+                                .apply();
+
+                        Intent intent = new Intent(getActivity(), LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        requireActivity().finish();
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
         }
     }
 }

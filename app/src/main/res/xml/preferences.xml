@@ -1,24 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="Account Settings">
+    <PreferenceCategory android:title="SIP Account">
         <EditTextPreference
             android:key="namePref"
             android:title="Username"
             android:summary="SIP extension/username"
-            android:defaultValue="" />
-
-        <EditTextPreference
-            android:key="phonePref"
-            android:title="Phone Number"
-            android:summary="Used for balance check (e.g., 4915901005556)"
-            android:defaultValue=""
-            android:inputType="phone" />
-
-        <EditTextPreference
-            android:key="authIdPref"
-            android:title="Authentication ID"
-            android:summary="Usually same as username (leave blank if unsure)"
             android:defaultValue="" />
 
         <EditTextPreference
@@ -28,10 +15,18 @@
             android:defaultValue=""
             android:inputType="textPassword" />
 
+        <SwitchPreferenceCompat
+            android:key="enabledPref"
+            android:title="Enable Account"
+            android:summary="Connect or disconnect from SIP server"
+            android:defaultValue="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Server Configuration">
         <EditTextPreference
             android:key="domainPref"
-            android:title="Domain"
-            android:summary="SIP server domain (e.g., sinitpower.de)"
+            android:title="Server Domain"
+            android:summary="SIP &amp; API domain (e.g., sinitpower.de)"
             android:defaultValue="sinitpower.de" />
 
         <EditTextPreference
@@ -56,17 +51,22 @@
             android:defaultValue="UDP" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Connection">
-        <SwitchPreferenceCompat
-            android:key="enabledPref"
-            android:title="Enable Account"
-            android:summary="Connect or disconnect from SIP server"
-            android:defaultValue="true" />
-        
+    <PreferenceCategory android:title="Actions">
+        <Preference
+            android:id="@+id/login_pref"
+            android:key="loginPref"
+            android:title="Login / Register"
+            android:summary="Sign in to sync your MagnusBilling account" />
+
         <Preference
             android:key="reconnectPref"
-            android:title="Reconnect"
-            android:summary="Force a re-registration with the server" />
+            android:title="Force Reconnect"
+            android:summary="Manually trigger SIP registration" />
+
+        <Preference
+            android:key="logoutPref"
+            android:title="Logout"
+            android:summary="Clear credentials and switch user" />
     </PreferenceCategory>
 
 </PreferenceScreen>

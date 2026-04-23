@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
                 loadFragment(contactsFragment);
                 return true;
             } else if (id == R.id.navigation_history) {
-                loadFragment(PlaceholderFragment.newInstance("Call History"));
+                loadFragment(new HistoryFragment());
                 return true;
             } else if (id == R.id.navigation_settings) {
                 loadFragment(new SipSettings.SipPreferenceFragment());
