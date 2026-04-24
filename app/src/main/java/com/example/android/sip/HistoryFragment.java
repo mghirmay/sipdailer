@@ -53,18 +53,28 @@ public class HistoryFragment extends Fragment {
     }
 
     private void fetchHistory() {
+        if (!isAdded()) return;
+        
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
         String domain = prefs.getString("domainPref", "sinitpower.de");
-        String apiPath = prefs.getString("apiPathPref", "/magnusbillingApi.php");
+        String apiPath = prefs.getString("apiPathPref", "/webAPI/magnusbillingApi.php");
         apiClient.setBaseUrl("https://" + domain + apiPath);
 
-        String username = prefs.getString("namePref", "");
-        if (username.isEmpty()) return;
+        String username = prefs.getString("loginUsernamePref", "");
+        if (username.isEmpty()) {
+            username = prefs.getString("namePref", "");
+        }
+        
+        if (username.isEmpty()) {
+            swipeRefreshLayout.setRefreshing(false);
+            return;
+        }
 
         progressBar.setVisibility(View.VISIBLE);
         apiClient.getCallHistory(username, new MagnusApiClient.ApiCallback<JSONArray>() {
             @Override
             public void onSuccess(JSONArray result) {
+                if (!isAdded()) return;
                 progressBar.setVisibility(View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
                 
@@ -79,6 +89,7 @@ public class HistoryFragment extends Fragment {
 
             @Override
             public void onError(String error) {
+                if (!isAdded()) return;
                 progressBar.setVisibility(View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
                 emptyText.setVisibility(View.VISIBLE);
@@ -105,15 +116,18 @@ public class HistoryFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             JSONObject item = items.get(position);
-            // Fields from MagnusBilling CDR: destination, start_time, duration, sessionbill
-            holder.tvDestination.setText(item.optString("destination"));
-            holder.tvTime.setText(item.optString("start_time"));
             
-            int duration = item.optInt("duration", 0);
-            holder.tvDuration.setText(String.format("%02d:%02d", duration / 60, duration % 60));
+            // Fixed field names based on MagnusBilling CDR table structure
+            holder.tvDestination.setText(item.optString("calledstation"));
+            holder.tvTime.setText(item.optString("starttime"));
+            
+            int durationSeconds = item.optInt("sessiontime", 0);
+            int minutes = durationSeconds / 60;
+            int seconds = durationSeconds % 60;
+            holder.tvDuration.setText(String.format("%02d:%02d", minutes, seconds));
             
             String cost = item.optString("sessionbill", "0.00");
-            holder.tvCost.setText("-" + cost);
+            holder.tvCost.setText("€ " + cost);
         }
 
         @Override

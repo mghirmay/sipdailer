@@ -8,8 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -18,7 +16,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class MagnusApiClient {
-    private String baseUrl = "https://sinitpower.de/magnusbillingApi.php";
+    private String baseUrl = "https://sinitpower.de/webAPI/magnusbillingApi.php";
     private final OkHttpClient client = new OkHttpClient();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
@@ -32,32 +30,26 @@ public class MagnusApiClient {
     }
 
     public void login(String username, String password, ApiCallback<JSONObject> callback) {
-        String url = baseUrl + "?action=login";
         JSONObject body = new JSONObject();
         try {
+            body.put("action", "login");
             body.put("username", username);
             body.put("password", password);
         } catch (Exception ignored) {}
-
-        executePostRequest(url, body, json -> {
-            callback.onSuccess(json);
-        }, callback::onError);
+        executePostRequest(baseUrl, body, callback::onSuccess, callback::onError);
     }
 
     public void register(String username, String password, String firstname, String lastname, String email, ApiCallback<JSONObject> callback) {
-        String url = baseUrl + "?action=register";
         JSONObject body = new JSONObject();
         try {
+            body.put("action", "register");
             body.put("username", username);
             body.put("password", password);
             body.put("firstname", firstname);
             body.put("lastname", lastname);
             body.put("email", email);
         } catch (Exception ignored) {}
-
-        executePostRequest(url, body, json -> {
-            callback.onSuccess(json);
-        }, callback::onError);
+        executePostRequest(baseUrl, body, callback::onSuccess, callback::onError);
     }
 
     public void getBalance(String username, ApiCallback<String> callback) {
@@ -65,6 +57,8 @@ public class MagnusApiClient {
         executeRequest(url, json -> {
             if (json.has("balance")) {
                 callback.onSuccess(json.getString("balance"));
+            } else if (json.has("data") && json.getJSONObject("data").has("credit")) {
+                callback.onSuccess(json.getJSONObject("data").getString("credit"));
             } else {
                 callback.onError("No balance field");
             }
@@ -72,12 +66,12 @@ public class MagnusApiClient {
     }
 
     public void getCallHistory(String username, ApiCallback<JSONArray> callback) {
-        String url = baseUrl + "?action=cdr&username=" + username;
+        String url = baseUrl + "?action=call&username=" + username;
         executeRequest(url, json -> {
             if (json.has("data")) {
                 callback.onSuccess(json.getJSONArray("data"));
             } else {
-                callback.onError("No data field");
+                callback.onError("No history found");
             }
         }, callback::onError);
     }
@@ -88,14 +82,12 @@ public class MagnusApiClient {
             if (json.has("data")) {
                 callback.onSuccess(json.getJSONObject("data"));
             } else {
-                callback.onError("No data field");
+                callback.onError("No user data found");
             }
         }, callback::onError);
     }
 
     private void executePostRequest(String url, JSONObject jsonBody, JsonProcessor processor, ErrorHandler errorHandler) {
-        Log.d("MagnusApiClient", "POST Request: " + url);
-        
         okhttp3.FormBody.Builder formBuilder = new okhttp3.FormBody.Builder();
         java.util.Iterator<String> keys = jsonBody.keys();
         while(keys.hasNext()) {
@@ -111,7 +103,6 @@ public class MagnusApiClient {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.e("MagnusApiClient", "POST Failed", e);
                 mainHandler.post(() -> errorHandler.onError(e.getMessage()));
             }
 
@@ -123,13 +114,14 @@ public class MagnusApiClient {
     }
 
     private void executeRequest(String url, JsonProcessor processor, ErrorHandler errorHandler) {
-        Log.d("MagnusApiClient", "GET Request: " + url);
-        Request request = new Request.Builder().url(url).build();
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Accept", "application/json")
+                .build();
 
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.e("MagnusApiClient", "GET Failed", e);
                 mainHandler.post(() -> errorHandler.onError(e.getMessage()));
             }
 
@@ -141,37 +133,25 @@ public class MagnusApiClient {
     }
 
     private void handleResponse(Response response, JsonProcessor processor, ErrorHandler errorHandler) throws IOException {
-        if (response.isSuccessful() && response.body() != null) {
+        String responseData = (response.body() != null) ? response.body().string() : "";
+        if (response.isSuccessful()) {
             try {
-                String responseData = response.body().string();
-                Log.d("MagnusApiClient", "Response: " + responseData);
                 JSONObject json = new JSONObject(responseData);
-                
                 if ("success".equals(json.optString("status"))) {
                     mainHandler.post(() -> {
-                        try {
-                            processor.process(json);
-                        } catch (Exception e) {
-                            errorHandler.onError(e.getMessage());
-                        }
+                        try { processor.process(json); } catch (Exception e) { errorHandler.onError(e.getMessage()); }
                     });
                 } else {
                     mainHandler.post(() -> errorHandler.onError(json.optString("message", "Unknown error")));
                 }
             } catch (Exception e) {
-                Log.e("MagnusApiClient", "JSON Parse error", e);
-                mainHandler.post(() -> errorHandler.onError("Parse error"));
+                mainHandler.post(() -> errorHandler.onError("Invalid server response"));
             }
         } else {
             mainHandler.post(() -> errorHandler.onError("Server error: " + response.code()));
         }
     }
 
-    interface JsonProcessor {
-        void process(JSONObject json) throws Exception;
-    }
-
-    interface ErrorHandler {
-        void onError(String error);
-    }
+    interface JsonProcessor { void process(JSONObject json) throws Exception; }
+    interface ErrorHandler { void onError(String error); }
 }

@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="SIP Account">
+    <PreferenceCategory android:title="MagnusBilling Login">
+        <EditTextPreference
+            android:key="loginUsernamePref"
+            android:title="Login Username"
+            android:summary="Used for API &amp; Balance check"
+            android:defaultValue="" />
+            
+        <EditTextPreference
+            android:key="loginPasswordPref"
+            android:title="Login Password"
+            android:summary="Password for the user portal"
+            android:defaultValue=""
+            android:inputType="textPassword" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="SIP Account (Auto-filled on Login)">
         <EditTextPreference
             android:key="namePref"
-            android:title="Username"
-            android:summary="SIP extension/username"
+            android:title="SIP Username"
+            android:summary="SIP extension"
             android:defaultValue="" />
 
         <EditTextPreference
             android:key="passPref"
-            android:title="Password"
+            android:title="SIP Password"
             android:summary="SIP password"
             android:defaultValue=""
             android:inputType="textPassword" />
@@ -32,8 +47,8 @@
         <EditTextPreference
             android:key="apiPathPref"
             android:title="API Path"
-            android:summary="Path to the Magnus API helper (e.g., /magnusbillingApi.php)"
-            android:defaultValue="/magnusbillingApi.php" />
+            android:summary="Path to the Magnus API helper (e.g., /webAPI/magnusbillingApi.php)"
+            android:defaultValue="/webAPI/magnusbillingApi.php" />
 
         <EditTextPreference
             android:key="portPref"
@@ -67,12 +82,6 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Actions">
-        <Preference
-            android:id="@+id/login_pref"
-            android:key="loginPref"
-            android:title="Login / Register"
-            android:summary="Sign in to sync your MagnusBilling account" />
-
         <Preference
             android:key="reconnectPref"
             android:title="Force Reconnect"

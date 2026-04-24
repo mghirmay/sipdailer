@@ -31,8 +31,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // Removed auto-login check because MainActivity is now the entry point.
-
         setContentView(R.layout.activity_login);
 
         etUsername = findViewById(R.id.login_username);
@@ -47,8 +45,6 @@ public class LoginActivity extends AppCompatActivity {
 
         btnLogin.setOnClickListener(v -> attemptLogin());
         btnSkip.setOnClickListener(v -> {
-            // If we came from MainActivity/Settings, just go back.
-            // If this was somehow the launcher, go to MainActivity.
             if (isTaskRoot()) {
                 startActivity(new Intent(this, MainActivity.class));
             }
@@ -63,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
     private void updateApiUrl() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String domain = prefs.getString("domainPref", "sinitpower.de");
-        String apiPath = prefs.getString("apiPathPref", "/magnusbillingApi.php");
+        String apiPath = prefs.getString("apiPathPref", "/webAPI/magnusbillingApi.php");
         apiClient.setBaseUrl("https://" + domain + apiPath);
     }
 
@@ -75,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
         EditText etPath = dialogView.findViewById(R.id.edit_api_path);
         
         etDomain.setText(prefs.getString("domainPref", "sinitpower.de"));
-        etPath.setText(prefs.getString("apiPathPref", "/magnusbillingApi.php"));
+        etPath.setText(prefs.getString("apiPathPref", "/webAPI/magnusbillingApi.php"));
 
         new AlertDialog.Builder(this)
                 .setTitle("Server Settings")
@@ -97,10 +93,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void attemptLogin() {
-        String username = etUsername.getText().toString().trim();
-        String password = etPassword.getText().toString().trim();
+        final String loginUser = etUsername.getText().toString().trim();
+        final String loginPass = etPassword.getText().toString().trim();
 
-        if (username.isEmpty() || password.isEmpty()) {
+        if (loginUser.isEmpty() || loginPass.isEmpty()) {
             Toast.makeText(this, "Username and password required", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -108,20 +104,39 @@ public class LoginActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         btnLogin.setEnabled(false);
 
-        apiClient.login(username, password, new MagnusApiClient.ApiCallback<JSONObject>() {
+        apiClient.login(loginUser, loginPass, new MagnusApiClient.ApiCallback<JSONObject>() {
             @Override
             public void onSuccess(JSONObject result) {
                 progressBar.setVisibility(View.GONE);
-                Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
                 
-                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit();
-                editor.putString("namePref", username);
-                editor.putString("passPref", password);
-                editor.putBoolean("enabledPref", true);
-                editor.apply();
-                
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                finish();
+                try {
+                    JSONObject data = result.getJSONObject("data");
+                    
+                    // The server no longer sends the password back. 
+                    // We use the 'loginPass' that the user just typed.
+                    String sipUser = data.getString("sip-username");
+
+                    SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit();
+                    
+                    // 1. Store the Login Credentials (used for API calls)
+                    editor.putString("loginUsernamePref", loginUser);
+                    editor.putString("loginPasswordPref", loginPass);
+                    
+                    // 2. Store the SIP Credentials (since password is the same)
+                    editor.putString("namePref", sipUser);
+                    editor.putString("passPref", loginPass); // Using the password entered locally
+                    
+                    editor.putBoolean("enabledPref", true);
+                    editor.apply();
+
+                    Toast.makeText(LoginActivity.this, "Logged in: " + sipUser, Toast.LENGTH_SHORT).show();
+                    
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    finish();
+                    
+                } catch (Exception e) {
+                    onError("Invalid response from server");
+                }
             }
 
             @Override
