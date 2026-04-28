@@ -1,12 +1,16 @@
-package com.example.android.sip;
+package de.sinitpower.sinitphone;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.pm.ServiceInfo;
+import android.media.AudioManager;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
@@ -19,8 +23,8 @@ import org.linphone.core.*;
 
 public class LinphoneService extends Service {
 
-    public static final String ACTION_CALL_STATE_CHANGED = "com.example.android.sip.CALL_STATE_CHANGED";
-    public static final String ACTION_REGISTRATION_STATE = "com.example.android.sip.REGISTRATION_STATE";
+    public static final String ACTION_CALL_STATE_CHANGED = "de.sinitpower.sinitphone.CALL_STATE_CHANGED";
+    public static final String ACTION_REGISTRATION_STATE = "de.sinitpower.sinitphone.REGISTRATION_STATE";
     public static final String EXTRA_CALL_STATE = "call_state";
     public static final String EXTRA_CALLER = "caller";
     public static final String EXTRA_REG_STATE = "reg_state";
@@ -33,6 +37,7 @@ public class LinphoneService extends Service {
 
     private Core core;
     private final IBinder binder = new LocalBinder();
+    private boolean stopWhenIdle = false;
 
     public class LocalBinder extends Binder {
         LinphoneService getService() {
@@ -44,9 +49,20 @@ public class LinphoneService extends Service {
     public void onCreate() {
         super.onCreate();
         createNotificationChannels();
+        
+        int type = 0;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            startForeground(NOTIF_SERVICE, buildServiceNotification(),
-                    ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE);
+            type = ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                    Log.w("SinitPhone", "Microphone permission not granted, starting service without microphone type to avoid crash");
+                    type = 0;
+                }
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && type != 0) {
+            startForeground(NOTIF_SERVICE, buildServiceNotification(), type);
         } else {
             startForeground(NOTIF_SERVICE, buildServiceNotification());
         }
@@ -69,7 +85,7 @@ public class LinphoneService extends Service {
                 PendingIntent.FLAG_IMMUTABLE);
         return new NotificationCompat.Builder(this, CHANNEL_SERVICE)
                 .setSmallIcon(android.R.drawable.sym_call_incoming)
-                .setContentTitle("SIP Dialer")
+                .setContentTitle("SinitPhone")
                 .setContentText("Running")
                 .setContentIntent(tap)
                 .build();
@@ -77,31 +93,35 @@ public class LinphoneService extends Service {
 
     private void initCore() {
         // Reverting to setDebugMode as createLoggingService() is not available in this SDK version
-        Factory.instance().setDebugMode(true, "SipDialer");
+        Factory.instance().setDebugMode(true, "SinitPhone");
         core = Factory.instance().createCore(null, null, this);
-        core.setUserAgent("SipDialer", "1.0");
+        core.setUserAgent("SinitPhone", "1.0");
 
         core.addListener(new CoreListenerStub() {
             @Override
             public void onCallStateChanged(@NonNull Core core, @NonNull Call call, Call.State state, @NonNull String message) {
-                Log.d("SipDialer", "Call state changed: " + state.name());
+                Log.d("SinitPhone", "Call state changed: " + state.name());
                 broadcastCallState(state, call);
                 if (state == Call.State.IncomingReceived) {
                     showIncomingCallUi(call);
                 } else if (state == Call.State.End || state == Call.State.Released) {
                     cancelIncomingCallNotification();
+                    if (stopWhenIdle) {
+                        stopWhenIdle = false;
+                        unregisterAndStop();
+                    }
                 }
             }
 
             @Override
             public void onAccountRegistrationStateChanged(@NonNull Core core, @NonNull Account account, RegistrationState state, @NonNull String message) {
-                Log.d("SipDialer", "Account Reg state: " + state.name() + " (" + message + ")");
+                Log.d("SinitPhone", "Account Reg state: " + state.name() + " (" + message + ")");
                 broadcastRegistrationState(state.name(), message);
             }
 
             @Override
             public void onRegistrationStateChanged(@NonNull Core core, @NonNull ProxyConfig cfg, RegistrationState state, @NonNull String message) {
-                Log.d("SipDialer", "Proxy Reg state: " + state.name() + " (" + message + ")");
+                Log.d("SinitPhone", "Proxy Reg state: " + state.name() + " (" + message + ")");
                 broadcastRegistrationState(state.name(), message);
             }
         });
@@ -166,7 +186,7 @@ public class LinphoneService extends Service {
             core.addAccount(account);
             core.setDefaultAccount(account);
         } catch (Exception e) {
-            Log.e("SipDialer", "Error creating account", e);
+            Log.e("SinitPhone", "Error creating account", e);
         }
     }
 
@@ -181,7 +201,7 @@ public class LinphoneService extends Service {
                 core.inviteAddressWithParams(remote, params);
             }
         } catch (Exception e) {
-            Log.e("SipDialer", "Call failed", e);
+            Log.e("SinitPhone", "Call failed", e);
         }
     }
 
@@ -205,6 +225,16 @@ public class LinphoneService extends Service {
 
     public boolean isInCall() {
         return core != null && core.getCallsNb() > 0;
+    }
+
+    public void setSpeakerEnabled(boolean enabled) {
+        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        audioManager.setSpeakerphoneOn(enabled);
+    }
+
+    public boolean isSpeakerEnabled() {
+        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        return audioManager.isSpeakerphoneOn();
     }
 
     public Core getCore() {
@@ -252,9 +282,26 @@ public class LinphoneService extends Service {
         return binder;
     }
 
+    public void requestStopWhenIdle() {
+        if (isInCall()) {
+            stopWhenIdle = true;
+        } else {
+            unregisterAndStop();
+        }
+    }
+
+    private void unregisterAndStop() {
+        if (core != null) {
+            core.clearAccounts();
+            core.clearAllAuthInfo();
+        }
+        stopForeground(true);
+        stopSelf();
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     @Override

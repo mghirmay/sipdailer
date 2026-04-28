@@ -1,4 +1,4 @@
-package com.example.android.sip;
+package de.sinitpower.sinitphone;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -50,6 +50,14 @@ public class MainActivity extends AppCompatActivity {
     
     private final MagnusApiClient magnusApiClient = new MagnusApiClient();
 
+    private final ActivityResultLauncher<String[]> permissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
+                    results -> {
+                        // All requested permissions are handled here.
+                        // We start the service regardless, but it will have limited functionality if permissions are denied.
+                        startSipService();
+                    });
+
     private final BroadcastReceiver sipReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -63,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
                 if (callStatusText != null) {
                     callStatusText.setText(state);
                     callStatusText.setVisibility(View.VISIBLE);
+                }
+                if (dialpadFragment != null) {
+                    dialpadFragment.updateCallButton(isInCall());
                 }
             }
         }
@@ -111,6 +122,25 @@ public class MainActivity extends AppCompatActivity {
 
         loadFragment(dialpadFragment);
         requestPermissionsAndStart();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!bound) {
+            startSipService();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (bound && sipService != null) {
+            sipService.requestStopWhenIdle();
+            unbindService(connection);
+            bound = false;
+            sipService = null;
+        }
     }
 
     @Override
@@ -220,6 +250,12 @@ public class MainActivity extends AppCompatActivity {
         else pendingCallAddress = number;
     }
 
+    public void dialNumber(String number) {
+        navView.setSelectedItemId(R.id.navigation_dialpad);
+        getSupportFragmentManager().executePendingTransactions();
+        dialpadFragment.setDialNumber(number);
+    }
+
     public void hangUp() {
         if (bound && sipService != null) sipService.hangUp();
     }
@@ -228,11 +264,45 @@ public class MainActivity extends AppCompatActivity {
         return bound && sipService != null && sipService.isInCall();
     }
 
+    public void setSpeakerEnabled(boolean enabled) {
+        if (bound && sipService != null) {
+            sipService.setSpeakerEnabled(enabled);
+        }
+    }
+
+    public boolean isSpeakerEnabled() {
+        return bound && sipService != null && sipService.isSpeakerEnabled();
+    }
+
     private void loadFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).commit();
     }
 
     private void requestPermissionsAndStart() {
+        List<String> needed = new ArrayList<>();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+            needed.add(Manifest.permission.RECORD_AUDIO);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+            needed.add(Manifest.permission.POST_NOTIFICATIONS);
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+            needed.add(Manifest.permission.READ_CONTACTS);
+        }
+
+        if (needed.isEmpty()) {
+            startSipService();
+        } else {
+            permissionLauncher.launch(needed.toArray(new String[0]));
+        }
+    }
+
+    private void startSipService() {
+        if (bound) return;
         Intent intent = new Intent(this, LinphoneService.class);
         ContextCompat.startForegroundService(this, intent);
         bindService(intent, connection, Context.BIND_AUTO_CREATE);
@@ -240,10 +310,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (bound) {
-            unbindService(connection);
-            bound = false;
-        }
         super.onDestroy();
     }
 }

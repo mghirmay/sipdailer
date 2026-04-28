@@ -13,5 +13,5 @@ dependencyResolutionManagement {
         maven { url "https://download.linphone.org/maven_repository" }
     }
 }
-rootProject.name = "SipDialer"
+rootProject.name = "SinitPhone"
 include ':app'

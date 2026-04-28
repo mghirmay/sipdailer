@@ -1,4 +1,4 @@
-package com.example.android.sip;
+package de.sinitpower.sinitphone;
 
 import android.content.Intent;
 import android.content.SharedPreferences;

@@ -1,5 +1,6 @@
-package com.example.android.sip;
+package de.sinitpower.sinitphone;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,40 +18,47 @@ import androidx.preference.PreferenceManager;
 
 import org.json.JSONObject;
 
-public class RegisterActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
-    private EditText etUsername, etPassword, etFirstName, etLastName, etEmail;
-    private Button btnRegister;
+    private EditText etUsername, etPassword;
+    private Button btnLogin, btnSkip;
     private ImageButton btnServerSettings;
+    private TextView tvRegisterLink;
     private ProgressBar progressBar;
     private final MagnusApiClient apiClient = new MagnusApiClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        
+        setContentView(R.layout.activity_login);
 
-        etUsername = findViewById(R.id.reg_username);
-        etPassword = findViewById(R.id.reg_password);
-        etFirstName = findViewById(R.id.reg_firstname);
-        etLastName = findViewById(R.id.reg_lastname);
-        etEmail = findViewById(R.id.reg_email);
-        btnRegister = findViewById(R.id.btn_register);
-        btnServerSettings = findViewById(R.id.btn_server_settings_reg);
-        progressBar = findViewById(R.id.reg_progress);
-        TextView tvLoginLink = findViewById(R.id.tv_login_link);
+        etUsername = findViewById(R.id.login_username);
+        etPassword = findViewById(R.id.login_password);
+        btnLogin = findViewById(R.id.btn_login);
+        btnSkip = findViewById(R.id.btn_skip_login);
+        btnServerSettings = findViewById(R.id.btn_server_settings);
+        tvRegisterLink = findViewById(R.id.tv_register_link);
+        progressBar = findViewById(R.id.login_progress);
 
         updateApiUrl();
 
-        btnRegister.setOnClickListener(v -> attemptRegister());
+        btnLogin.setOnClickListener(v -> attemptLogin());
+        btnSkip.setOnClickListener(v -> {
+            if (isTaskRoot()) {
+                startActivity(new Intent(this, MainActivity.class));
+            }
+            finish();
+        });
         btnServerSettings.setOnClickListener(v -> showServerSettingsDialog());
-        tvLoginLink.setOnClickListener(v -> finish());
+        tvRegisterLink.setOnClickListener(v -> {
+            startActivity(new Intent(this, RegisterActivity.class));
+        });
     }
 
     private void updateApiUrl() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String domain = prefs.getString("domainPref", "sinitpower.de");
-        // Updated to the correct subfolder
         String apiPath = prefs.getString("apiPathPref", "/webAPI/magnusbillingApi.php");
         apiClient.setBaseUrl("https://" + domain + apiPath);
     }
@@ -84,40 +92,58 @@ public class RegisterActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void attemptRegister() {
-        String username = etUsername.getText().toString().trim();
-        String password = etPassword.getText().toString().trim();
-        String firstName = etFirstName.getText().toString().trim();
-        String lastName = etLastName.getText().toString().trim();
-        String email = etEmail.getText().toString().trim();
+    private void attemptLogin() {
+        final String loginUser = etUsername.getText().toString().trim();
+        final String loginPass = etPassword.getText().toString().trim();
 
-        if (username.isEmpty() || password.isEmpty()) {
+        if (loginUser.isEmpty() || loginPass.isEmpty()) {
             Toast.makeText(this, "Username and password required", Toast.LENGTH_SHORT).show();
             return;
         }
 
         progressBar.setVisibility(View.VISIBLE);
-        btnRegister.setEnabled(false);
+        btnLogin.setEnabled(false);
 
-        apiClient.register(username, password, firstName, lastName, email, new MagnusApiClient.ApiCallback<JSONObject>() {
+        apiClient.login(loginUser, loginPass, new MagnusApiClient.ApiCallback<JSONObject>() {
             @Override
             public void onSuccess(JSONObject result) {
                 progressBar.setVisibility(View.GONE);
-                Toast.makeText(RegisterActivity.this, "Registration Successful!", Toast.LENGTH_LONG).show();
                 
-                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(RegisterActivity.this).edit();
-                editor.putString("namePref", username);
-                editor.putString("passPref", password);
-                editor.apply();
-                
-                finish();
+                try {
+                    JSONObject data = result.getJSONObject("data");
+                    
+                    // The server no longer sends the password back. 
+                    // We use the 'loginPass' that the user just typed.
+                    String sipUser = data.getString("sip-username");
+
+                    SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit();
+                    
+                    // 1. Store the Login Credentials (used for API calls)
+                    editor.putString("loginUsernamePref", loginUser);
+                    editor.putString("loginPasswordPref", loginPass);
+                    
+                    // 2. Store the SIP Credentials (since password is the same)
+                    editor.putString("namePref", sipUser);
+                    editor.putString("passPref", loginPass); // Using the password entered locally
+                    
+                    editor.putBoolean("enabledPref", true);
+                    editor.apply();
+
+                    Toast.makeText(LoginActivity.this, "Logged in: " + sipUser, Toast.LENGTH_SHORT).show();
+                    
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    finish();
+                    
+                } catch (Exception e) {
+                    onError("Invalid response from server");
+                }
             }
 
             @Override
             public void onError(String error) {
                 progressBar.setVisibility(View.GONE);
-                btnRegister.setEnabled(true);
-                Toast.makeText(RegisterActivity.this, "Registration Failed: " + error, Toast.LENGTH_LONG).show();
+                btnLogin.setEnabled(true);
+                Toast.makeText(LoginActivity.this, "Login Failed: " + error, Toast.LENGTH_LONG).show();
             }
         });
     }

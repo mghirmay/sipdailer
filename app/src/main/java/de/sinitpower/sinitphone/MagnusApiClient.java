@@ -1,4 +1,4 @@
-package com.example.android.sip;
+package de.sinitpower.sinitphone;
 
 import android.os.Handler;
 import android.os.Looper;

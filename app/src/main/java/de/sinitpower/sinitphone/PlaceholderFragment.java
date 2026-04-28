@@ -1,4 +1,4 @@
-package com.example.android.sip;
+package de.sinitpower.sinitphone;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

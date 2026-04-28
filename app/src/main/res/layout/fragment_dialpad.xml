@@ -59,6 +59,19 @@
         <com.google.android.material.button.MaterialButton android:text="#" style="@style/DialpadButton" android:hapticFeedbackEnabled="true" />
     </GridLayout>
 
+    <ImageButton
+        android:id="@+id/btnSpeaker"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="@drawable/bg_circle"
+        android:src="@drawable/ic_speaker"
+        android:padding="14dp"
+        app:layout_constraintBottom_toBottomOf="@+id/btnCall"
+        app:layout_constraintEnd_toStartOf="@+id/btnCall"
+        app:layout_constraintTop_toTopOf="@+id/btnCall"
+        app:layout_constraintHorizontal_bias="0.7"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnCall"
         android:layout_width="wrap_content"
@@ -70,7 +83,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:maxImageSize="36dp"
-        app:srcCompat="@android:drawable/ic_menu_call"
+        app:srcCompat="@drawable/ic_call"
         app:tint="@color/on_primary" />
 
     <ImageButton

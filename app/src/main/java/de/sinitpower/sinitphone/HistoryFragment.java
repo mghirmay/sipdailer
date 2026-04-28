@@ -1,10 +1,12 @@
-package com.example.android.sip;
+package de.sinitpower.sinitphone;
 
+import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -118,7 +120,8 @@ public class HistoryFragment extends Fragment {
             JSONObject item = items.get(position);
             
             // Fixed field names based on MagnusBilling CDR table structure
-            holder.tvDestination.setText(item.optString("calledstation"));
+            String number = item.optString("calledstation");
+            holder.tvDestination.setText(number);
             holder.tvTime.setText(item.optString("starttime"));
             
             int durationSeconds = item.optInt("sessiontime", 0);
@@ -128,6 +131,30 @@ public class HistoryFragment extends Fragment {
             
             String cost = item.optString("sessionbill", "0.00");
             holder.tvCost.setText("€ " + cost);
+
+            holder.itemView.setOnClickListener(v -> {
+                if (!(v.getContext() instanceof MainActivity)) return;
+                MainActivity activity = (MainActivity) v.getContext();
+
+                EditText editNumber = new EditText(activity);
+                editNumber.setText(number);
+                editNumber.setSelection(number.length());
+                int pad = (int) (12 * activity.getResources().getDisplayMetrics().density);
+                editNumber.setPadding(pad, pad, pad, pad);
+
+                new AlertDialog.Builder(activity)
+                        .setTitle("Call number")
+                        .setView(editNumber)
+                        .setPositiveButton("Call", (dialog, which) -> {
+                            String num = editNumber.getText().toString().trim();
+                            if (!num.isEmpty()) {
+                                activity.dialNumber(num);
+                                activity.makeCall(num);
+                            }
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .show();
+            });
         }
 
         @Override

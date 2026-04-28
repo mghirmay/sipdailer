@@ -1,6 +1,6 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.SipDialer" parent="Theme.Material3.Light.NoActionBar">
+    <style name="Theme.SinitPhone" parent="Theme.Material3.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorOnPrimary">@color/on_primary</item>
@@ -36,8 +36,8 @@
         <item name="android:textSize">28sp</item>
         <item name="android:textColor">@color/dialpad_button_text</item>
         <item name="backgroundTint">@color/dialpad_key_bg</item>
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.SipDialer.Circle</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.SinitPhone.Circle</item>
     </style>
 
-    <style name="ShapeAppearance.SipDialer.Circle" parent="ShapeAppearance.Material3.Corner.Full" />
+    <style name="ShapeAppearance.SinitPhone.Circle" parent="ShapeAppearance.Material3.Corner.Full" />
 </resources>

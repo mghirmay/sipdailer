@@ -16,9 +16,9 @@
     <uses-feature android:name="android.hardware.wifi" android:required="true" />
 
     <application
-        android:icon="@drawable/icon"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.SipDialer">
+        android:theme="@style/Theme.SinitPhone">
 
         <activity
             android:name=".MainActivity"
@@ -50,7 +50,7 @@
         <activity
             android:name=".SipSettings"
             android:label="SIP Settings"
-            android:theme="@style/Theme.SipDialer"
+            android:theme="@style/Theme.SinitPhone"
             android:parentActivityName=".MainActivity"
             android:exported="false">
             <meta-data

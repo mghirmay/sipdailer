@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Brand Colors (Teal) -->
-    <color name="primary">#004D40</color>
-    <color name="primary_variant">#00251A</color>
+    <!-- Brand Colors (from logo) -->
+    <color name="primary">#009FE3</color>       <!-- logo cyan blue -->
+    <color name="primary_variant">#015F51</color>  <!-- logo dark teal -->
     <color name="on_primary">#FFFFFF</color>
-    
-    <color name="secondary">#26A69A</color>
-    <color name="on_secondary">#000000</color>
-    
-    <!-- Light Mode Surfaces -->
-    <color name="background">#F5F5F5</color>
-    <color name="on_background">#212121</color>
+
+    <color name="secondary">#B07E4B</color>     <!-- logo warm golden brown -->
+    <color name="on_secondary">#FFFFFF</color>
+
+    <!-- Surfaces -->
+    <color name="background">#F5FAFE</color>
+    <color name="on_background">#012B24</color>
     <color name="surface">#FFFFFF</color>
-    <color name="on_surface">#212121</color>
-    
+    <color name="on_surface">#012B24</color>
+
     <!-- Error colors -->
-    <color name="error">#B00020</color>
+    <color name="error">#B71C1C</color>
     <color name="on_error">#FFFFFF</color>
 
     <!-- Text secondary -->
-    <color name="text_secondary">#757575</color>
+    <color name="text_secondary">#5B7F8A</color>
 
     <!-- Dialpad key background -->
-    <color name="dialpad_key_bg">#EEEEEE</color>
+    <color name="dialpad_key_bg">#E0F5FD</color>
 
     <!-- Status colors -->
-    <color name="call_button_bg">#4CAF50</color>
-    <color name="hangup_button_bg">#F44336</color>
-    <color name="dialpad_button_text">#424242</color>
+    <color name="call_button_bg">#2E7D32</color>
+    <color name="hangup_button_bg">#C62828</color>
+    <color name="dialpad_button_text">#007AB5</color>
 </resources>

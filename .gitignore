@@ -16,6 +16,8 @@ local.properties
 bin/
 gen/
 out/
+release/
+debug/
 
 # Backup / Cache
 .claude/
