@@ -75,9 +75,11 @@ public class IncomingCallActivity extends AppCompatActivity {
 
         findViewById(R.id.btn_answer).setOnClickListener(v -> {
             if (bound) sipService.answerCall();
-            Intent main = new Intent(this, MainActivity.class);
-            main.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(main);
+            Intent active = new Intent(this, ActiveCallActivity.class);
+            active.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            active.putExtra(LinphoneService.EXTRA_CALLER, caller);
+            active.putExtra(LinphoneService.EXTRA_CALL_STATE, "Connected");
+            startActivity(active);
             finish();
         });
 

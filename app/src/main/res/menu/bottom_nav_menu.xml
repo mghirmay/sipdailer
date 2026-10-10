@@ -5,10 +5,6 @@
         android:icon="@drawable/ic_nav_dialpad"
         android:title="Dialpad" />
     <item
-        android:id="@+id/navigation_contacts"
-        android:icon="@drawable/ic_nav_contacts"
-        android:title="Contacts" />
-    <item
         android:id="@+id/navigation_history"
         android:icon="@drawable/ic_nav_history"
         android:title="History" />

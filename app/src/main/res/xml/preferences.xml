@@ -81,6 +81,15 @@
             android:dependency="stunEnabledPref" />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="Dialing">
+        <EditTextPreference
+            android:key="countryCodePref"
+            android:title="Country Code"
+            android:summary="Used to expand national numbers (e.g. 49 for Germany)"
+            android:defaultValue="49"
+            android:inputType="number" />
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="Actions">
         <Preference
             android:key="reconnectPref"

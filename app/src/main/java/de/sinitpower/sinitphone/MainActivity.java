@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
     private String pendingCallAddress = null;
 
     private DialpadFragment dialpadFragment = new DialpadFragment();
-    private ContactsFragment contactsFragment = new ContactsFragment();
     private BottomNavigationView navView;
     private TextView connectionStatusText;
     private TextView callStatusText;
@@ -90,7 +89,9 @@ public class MainActivity extends AppCompatActivity {
                 pendingCallAddress = null;
             }
             updateRegistrationStatus(sipService.getRegistrationState());
-            performRegistration();
+            if (!sipService.isInCall()) {
+                performRegistration();
+            }
             fetchRemoteStatus();
         }
 
@@ -114,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
         navView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.navigation_dialpad) loadFragment(dialpadFragment);
-            else if (id == R.id.navigation_contacts) loadFragment(contactsFragment);
             else if (id == R.id.navigation_history) loadFragment(new HistoryFragment());
             else if (id == R.id.navigation_settings) loadFragment(new SipSettings.SipPreferenceFragment());
             return true;
@@ -136,7 +136,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         if (bound && sipService != null) {
-            sipService.requestStopWhenIdle();
+            if (!sipService.isInCall()) {
+                sipService.requestStopWhenIdle();
+            }
             unbindService(connection);
             bound = false;
             sipService = null;
@@ -243,11 +245,26 @@ public class MainActivity extends AppCompatActivity {
 
     public void makeCall(String number) {
         if (!number.contains("@")) {
+            number = normalizeNumber(number);
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
             number += "@" + prefs.getString("domainPref", "sinitpower.de");
         }
         if (bound && sipService != null) sipService.makeCall(number);
         else pendingCallAddress = number;
+    }
+
+    private String normalizeNumber(String number) {
+        number = number.replaceAll("[\\s\\-()./]+", "");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String countryCode = prefs.getString("countryCodePref", "49").trim();
+        if (number.startsWith("+")) {
+            // +2917888 → 002917888
+            return "00" + number.substring(1);
+        } else if (number.startsWith("0") && !number.startsWith("00")) {
+            // 07912345 → 00497912345
+            return "00" + countryCode + number.substring(1);
+        }
+        return number;
     }
 
     public void dialNumber(String number) {

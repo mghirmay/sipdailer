@@ -14,6 +14,7 @@ import android.media.AudioManager;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -34,10 +35,12 @@ public class LinphoneService extends Service {
     private static final String CHANNEL_CALLS = "sip_calls";
     private static final int NOTIF_SERVICE = 1;
     private static final int NOTIF_INCOMING = 2;
+    private static final int NOTIF_ACTIVE_CALL = 3;
 
     private Core core;
     private final IBinder binder = new LocalBinder();
     private boolean stopWhenIdle = false;
+    private PowerManager.WakeLock wakeLock;
 
     public class LocalBinder extends Binder {
         LinphoneService getService() {
@@ -104,8 +107,15 @@ public class LinphoneService extends Service {
                 broadcastCallState(state, call);
                 if (state == Call.State.IncomingReceived) {
                     showIncomingCallUi(call);
-                } else if (state == Call.State.End || state == Call.State.Released) {
+                } else if (state == Call.State.OutgoingProgress) {
+                    showActiveCallUi(call, state);
+                } else if (state == Call.State.StreamsRunning || state == Call.State.Connected) {
                     cancelIncomingCallNotification();
+                    showActiveCallNotification(call);
+                    acquireWakeLock();
+                } else if (state == Call.State.End || state == Call.State.Released) {
+                    cancelActiveCallNotification();
+                    releaseWakeLock();
                     if (stopWhenIdle) {
                         stopWhenIdle = false;
                         unregisterAndStop();
@@ -264,6 +274,50 @@ public class LinphoneService extends Service {
         startActivity(activityIntent);
     }
 
+    private void showActiveCallUi(Call call, Call.State state) {
+        String remote = call.getRemoteAddress().asStringUriOnly();
+        Intent intent = new Intent(this, ActiveCallActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra(EXTRA_CALLER, remote);
+        intent.putExtra(EXTRA_CALL_STATE, state.name());
+        startActivity(intent);
+    }
+
+    private void showActiveCallNotification(Call call) {
+        String remote = call.getRemoteAddress().asStringUriOnly();
+        Intent intent = new Intent(this, ActiveCallActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra(EXTRA_CALLER, remote);
+        intent.putExtra(EXTRA_CALL_STATE, "StreamsRunning");
+        PendingIntent tap = PendingIntent.getActivity(this, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        Notification notif = new NotificationCompat.Builder(this, CHANNEL_SERVICE)
+                .setSmallIcon(android.R.drawable.sym_call_outgoing)
+                .setContentTitle("Call in progress")
+                .setContentText(remote)
+                .setContentIntent(tap)
+                .setOngoing(true)
+                .build();
+        getSystemService(NotificationManager.class).notify(NOTIF_ACTIVE_CALL, notif);
+    }
+
+    private void cancelActiveCallNotification() {
+        getSystemService(NotificationManager.class).cancel(NOTIF_ACTIVE_CALL);
+    }
+
+    private void acquireWakeLock() {
+        if (wakeLock == null) {
+            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "SinitPhone:call");
+        }
+        if (!wakeLock.isHeld()) wakeLock.acquire();
+    }
+
+    private void releaseWakeLock() {
+        if (wakeLock != null && wakeLock.isHeld()) wakeLock.release();
+    }
+
     private void cancelIncomingCallNotification() {
         getSystemService(NotificationManager.class).cancel(NOTIF_INCOMING);
     }
@@ -306,6 +360,7 @@ public class LinphoneService extends Service {
 
     @Override
     public void onDestroy() {
+        releaseWakeLock();
         if (core != null) {
             core.stop();
             core = null;
