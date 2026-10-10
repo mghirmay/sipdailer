@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-An Android SIP/VoIP dialer app built on the Linphone SDK, targeting the `sinitpower.de` SIP server. Package: `com.example.android.sip`, minSdk 26, targetSdk 34.
+An Android SIP/VoIP dialer app built on the Linphone SDK, targeting the `synitlabs.de` SIP server. Package: `com.example.android.sip`, minSdk 26, targetSdk 34.
 
 ## Build & Deploy
 
@@ -34,7 +34,7 @@ Active source files are under `app/src/main/java/com/example/android/sip/`:
 
 - **`IncomingCallActivity.java`** — Full-screen incoming call UI, shown over the lock screen. Displays caller info with Answer/Decline buttons. Finishes automatically when a `CALL_ENDED` broadcast is received.
 
-- **`SipSettings.java`** — `PreferenceFragmentCompat`-based settings activity. Preference keys: `namePref`, `authIdPref`, `passPref`, `domainPref` (default: `sinitpower.de`), `portPref` (default: `5060`), `transportPref` (UDP/TCP/TLS), `enabledPref`, `reconnectPref`.
+- **`SipSettings.java`** — `PreferenceFragmentCompat`-based settings activity. Preference keys: `namePref`, `authIdPref`, `passPref`, `domainPref` (default: `synitlabs.de`), `portPref` (default: `5060`), `transportPref` (UDP/TCP/TLS), `enabledPref`, `reconnectPref`.
 
 - **`DialpadFragment.java`** / **`ContactsFragment.java`** / **`PlaceholderFragment.java`** — Fragments hosted by `MainActivity`. `ContactsFragment` reads the device contacts via `ContentResolver` and calls `LinphoneService.makeCall()` on tap.
 
