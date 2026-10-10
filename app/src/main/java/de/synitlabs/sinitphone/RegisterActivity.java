@@ -1,4 +1,4 @@
-package de.sinitpower.sinitphone;
+package de.synitlabs.sinitphone;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -49,7 +49,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void updateApiUrl() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String domain = prefs.getString("domainPref", "sinitpower.de");
+        String domain = prefs.getString("domainPref", "synitlabs.de");
         // Updated to the correct subfolder
         String apiPath = prefs.getString("apiPathPref", "/webAPI/magnusbillingApi.php");
         apiClient.setBaseUrl("https://" + domain + apiPath);
@@ -62,7 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
         EditText etDomain = dialogView.findViewById(R.id.edit_domain);
         EditText etPath = dialogView.findViewById(R.id.edit_api_path);
         
-        etDomain.setText(prefs.getString("domainPref", "sinitpower.de"));
+        etDomain.setText(prefs.getString("domainPref", "synitlabs.de"));
         etPath.setText(prefs.getString("apiPathPref", "/webAPI/magnusbillingApi.php"));
 
         new AlertDialog.Builder(this)

@@ -1,4 +1,4 @@
-package de.sinitpower.sinitphone;
+package de.synitlabs.sinitphone;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -16,7 +16,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class MagnusApiClient {
-    private String baseUrl = "https://sinitpower.de/webAPI/magnusbillingApi.php";
+    private String baseUrl = "https://synitlabs.de/webAPI/magnusbillingApi.php";
     private final OkHttpClient client = new OkHttpClient();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 

@@ -1,4 +1,4 @@
-package de.sinitpower.sinitphone;
+package de.synitlabs.sinitphone;
 
 import android.content.Context;
 import android.graphics.Canvas;

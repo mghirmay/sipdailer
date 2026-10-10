@@ -1,4 +1,4 @@
-package de.sinitpower.sinitphone;
+package de.synitlabs.sinitphone;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
 
         String user = prefs.getString("namePref", "");
         String pass = prefs.getString("passPref", "");
-        String domain = prefs.getString("domainPref", "sinitpower.de");
+        String domain = prefs.getString("domainPref", "synitlabs.de");
         int port = Integer.parseInt(prefs.getString("portPref", "5060"));
         String transport = prefs.getString("transportPref", "UDP");
         
@@ -247,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
         if (!number.contains("@")) {
             number = normalizeNumber(number);
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            number += "@" + prefs.getString("domainPref", "sinitpower.de");
+            number += "@" + prefs.getString("domainPref", "synitlabs.de");
         }
         if (bound && sipService != null) sipService.makeCall(number);
         else pendingCallAddress = number;

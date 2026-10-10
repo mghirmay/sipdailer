@@ -1,4 +1,4 @@
-package de.sinitpower.sinitphone;
+package de.synitlabs.sinitphone;
 
 import android.Manifest;
 import android.app.Notification;
@@ -24,8 +24,8 @@ import org.linphone.core.*;
 
 public class LinphoneService extends Service {
 
-    public static final String ACTION_CALL_STATE_CHANGED = "de.sinitpower.sinitphone.CALL_STATE_CHANGED";
-    public static final String ACTION_REGISTRATION_STATE = "de.sinitpower.sinitphone.REGISTRATION_STATE";
+    public static final String ACTION_CALL_STATE_CHANGED = "de.synitlabs.sinitphone.CALL_STATE_CHANGED";
+    public static final String ACTION_REGISTRATION_STATE = "de.synitlabs.sinitphone.REGISTRATION_STATE";
     public static final String EXTRA_CALL_STATE = "call_state";
     public static final String EXTRA_CALLER = "caller";
     public static final String EXTRA_REG_STATE = "reg_state";

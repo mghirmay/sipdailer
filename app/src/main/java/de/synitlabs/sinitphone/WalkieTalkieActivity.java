@@ -1,4 +1,4 @@
-package de.sinitpower.sinitphone;
+package de.synitlabs.sinitphone;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -192,7 +192,7 @@ public class WalkieTalkieActivity extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String username = prefs.getString("namePref", "");
         String authId = prefs.getString("authIdPref", "");
-        String domain = prefs.getString("domainPref", "sinitpower.de");
+        String domain = prefs.getString("domainPref", "synitlabs.de");
         String password = prefs.getString("passPref", "");
         String portStr = prefs.getString("portPref", "5060");
         String transport = prefs.getString("transportPref", "UDP");
@@ -261,7 +261,7 @@ public class WalkieTalkieActivity extends AppCompatActivity {
                     if (addr.isEmpty()) return;
                     if (!addr.contains("@")) {
                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-                        addr += "@" + prefs.getString("domainPref", "sinitpower.de");
+                        addr += "@" + prefs.getString("domainPref", "synitlabs.de");
                     }
                     if (bound) {
                         sipService.makeCall(addr);

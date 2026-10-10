@@ -15,7 +15,7 @@
         android:id="@+id/edit_domain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="e.g. sinitpower.de"
+        android:hint="e.g. synitlabs.de"
         android:inputType="textUri"
         android:layout_marginBottom="16dp" />
 

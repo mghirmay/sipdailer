@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'de.sinitpower.sinitphone'
+    namespace 'de.synitlabs.sinitphone'
     compileSdk 34
 
     defaultConfig {
-        applicationId "de.sinitpower.sinitphone"
+        applicationId "de.synitlabs.sinitphone"
         minSdk 26
         targetSdk 34
         versionCode 2

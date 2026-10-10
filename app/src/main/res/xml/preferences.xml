@@ -41,8 +41,8 @@
         <EditTextPreference
             android:key="domainPref"
             android:title="Server Domain"
-            android:summary="SIP &amp; API domain (e.g., sinitpower.de)"
-            android:defaultValue="sinitpower.de" />
+            android:summary="SIP &amp; API domain (e.g., synitlabs.de)"
+            android:defaultValue="synitlabs.de" />
 
         <EditTextPreference
             android:key="apiPathPref"

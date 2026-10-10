@@ -1,4 +1,4 @@
-package de.sinitpower.sinitphone;
+package de.synitlabs.sinitphone;
 
 import android.app.AlertDialog;
 import android.content.SharedPreferences;
@@ -58,7 +58,7 @@ public class HistoryFragment extends Fragment {
         if (!isAdded()) return;
         
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
-        String domain = prefs.getString("domainPref", "sinitpower.de");
+        String domain = prefs.getString("domainPref", "synitlabs.de");
         String apiPath = prefs.getString("apiPathPref", "/webAPI/magnusbillingApi.php");
         apiClient.setBaseUrl("https://" + domain + apiPath);
 

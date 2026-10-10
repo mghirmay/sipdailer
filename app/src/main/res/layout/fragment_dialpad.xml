@@ -50,7 +50,7 @@
             android:paddingEnd="28dp"
             android:clipToPadding="false" />
 
-        <de.sinitpower.sinitphone.AlphabetIndexView
+        <de.synitlabs.sinitphone.AlphabetIndexView
             android:id="@+id/dialAlphabetIndex"
             android:layout_width="28dp"
             android:layout_height="match_parent"
